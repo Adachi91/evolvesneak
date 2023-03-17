@@ -1,24 +1,37 @@
 import logo from './logo.svg';
 import './App.css';
 import Header from './components/head';
-import { decodeSave, testData, versionCheck } from './main';
+import { decodeSave, testData, testGameDataIntegrity, versionCheck } from './main';
+import ErrorBox from './components/errorBox';
 
 //<header className="App-header">
 function App() {
 
   const GameObj = decodeSave(testData);
-  const versionSanity = versionCheck(GameObj.version);
+  const errors = {Error: false, Type: "", Message: "" }
 
-  if(!versionSanity)
-  {
-    //throw a warning
-    console.warn("The game version is not the same!");
+  if(!testGameDataIntegrity(GameObj)) {
+    errors.Error = true;
+    errors.Type = "warn";
+    errors.Message = "Could not verify the structure of the game data.";
+
+    if(!versionCheck(GameObj.version)) {
+      errors.Error = true;
+      errors.Type = "info";
+      errors.Message = "The current version of the game is different from the version this app was made for. It may not load all resources correctly (if a new one was added).";
+    }
   }
+  
+  let gameResources;
+  
+  if(!errors.Error)
+    gameResources = GameObj.global.resource;
 
   return (
     <>
     <div className="App">
       <Header></Header>
+      <ErrorBox Error={errors.Error} Type={errors.Type} Message={errors.Message} />
         <img src={logo} className="App-logo" alt="logo" />
         <p>
           Edit <code>src/App.js</code> and save to reload.

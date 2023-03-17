@@ -1,12 +1,36 @@
 import styled from "styled-components";
 
+/* Game Elements */
 export const ElementContainer = styled.div`
-    color: #f09;
+    display: inline-flex;
+    margin-right: 1.05rem;
+
+    &::before {
+        content: attr(data-tip);
+        color: blanchedalmond;
+        padding: 6px;
+        line-height: 16px;
+        height: 20px;
+        top: 3.99rem;
+        opacity: 0;
+        transition: opacity 0.4s ease-out 0s;
+        font-weight: bold;
+        position: absolute;
+        z-index: 999;
+        white-space: nowrap;
+        background: rgb(150, 50, 50);
+        margin: auto -0.6rem;
+        font-size: 0.88rem;
+    }
+
+    &:hover::before {
+        opacity: 1;
+    }
 `;
 
 export const ElementContainerRestraint = styled.div`
     width: 80%;
-    margin:auto;
+    margin:3rem auto auto;;
 `;
 
 export const ElementNameLabel = styled.label`
@@ -25,10 +49,8 @@ export const ElementNumberBox = styled.input`
     margin-left: 0.4rem;
 `;
 
-export const MaxValueSpan = styled.span`
-    color: #f09;
-`;
 
+/* Errorbox */
 export const ErrorBoxContainer = styled.div`
     width: 33.3%;
     border: 1px solid rgb(200, 50, 50);
@@ -38,7 +60,7 @@ export const ErrorBoxContainer = styled.div`
     align-items: center;
     justify-content: center;
     box-shadow: 0px 0px 10px 1px rgb(200, 50, 50);
-`
+`;
 
 export const ErrorBoxMessage = styled.span`
     color: #fff;

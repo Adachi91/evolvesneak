@@ -1,4 +1,3 @@
-import React from 'react';
 import { decompressFromBase64, compressToBase64 } from 'lz-string';
 //const LZStringlib = require('lz-string');
 
@@ -46,7 +45,7 @@ export function encodeSave(save) {
  * @returns {boolean}
  */
 export function versionCheck(ver) {
-    const _version = ver == "1.3.3" ? true : false;
+    const _version = ver === "1.3.3" ? true : false;
 
     return _version;
 }
@@ -58,16 +57,15 @@ export function versionCheck(ver) {
  * @returns {boolean}
  */
 export function testGameDataIntegrity(obj) {
+    let result = true;
     try {
-        const result = true;
-        if(typeof obj.version !== "string") result = false;
         if(typeof obj !== "object") result = false;
-        if(typeof obj.global !== "object") result = false;
-        if(typeof obj.global.resource !== "object") result = false;
+        if(typeof obj.version !== "string") result = false;
+        if(typeof obj.resource !== "object") result = false;
         return result;
     } catch(ex) {
         console.warn(`Could not verify GameObj structure: ${ex}`);
-        return false;
+        return result;
     }
 }
 

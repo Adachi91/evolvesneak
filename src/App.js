@@ -3,12 +3,13 @@ import './App.css';
 import Header from './components/head';
 import { decodeSave, testData, testGameDataIntegrity, versionCheck } from './main';
 import ErrorBox from './components/errorBox';
+import ResourceElements from './components/bodyElements';
 
 //<header className="App-header">
 function App() {
 
   const GameObj = decodeSave(testData);
-  const errors = {Error: false, Type: "", Message: "" }
+  const errors = { Error: false, Type: "", Message: "" }
 
   if(!testGameDataIntegrity(GameObj)) {
     errors.Error = true;
@@ -25,14 +26,14 @@ function App() {
   let gameResources;
   
   if(!errors.Error)
-    gameResources = GameObj.global.resource;
+    gameResources = GameObj.resource;
 
-  errors.Type="info";
   return (
     <>
     <div className="App">
       <Header></Header>
       <ErrorBox Error={errors.Error} Type={errors.Type} Message={errors.Message} />
+      <ResourceElements Resources={gameResources} />
         <img src={logo} className="App-logo" alt="logo" />
         <p>
           Edit <code>src/App.js</code> and save to reload.

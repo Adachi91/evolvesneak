@@ -12,9 +12,9 @@ const ErrorBox = (props) => {
     const msg = props.Message;
 
     if(error) {
-        if(type == "info") {
+        if(type === "info") {
             return <ErrorBoxContainer><ErrorBoxInfo>Info: <ErrorBoxMessage>{msg}</ErrorBoxMessage></ErrorBoxInfo></ErrorBoxContainer>
-        } else if(type == "warn") {
+        } else if(type === "warn") {
             return <ErrorBoxContainer><ErrorBoxWarning>Error: <ErrorBoxMessage>{msg}</ErrorBoxMessage></ErrorBoxWarning></ErrorBoxContainer>
         }
     }

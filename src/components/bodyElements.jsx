@@ -1,5 +1,5 @@
 import React from "react";
-import { ElementContainer, MaxValueSpan } from "../styles/elementStyles";
+import { ElementContainer, ElementContainerRestraint, ElementNameLabel, ElementNumberBox, MaxValueSpan } from "../styles/elementStyles";
 //I picture you in the sun, wondering what went wrong.
 /*UIElements = {
     Labels: {
@@ -30,7 +30,21 @@ import { ElementContainer, MaxValueSpan } from "../styles/elementStyles";
 
 //function RunTrainOnGameObjs(props) {
 const ResourceElements = (props) => {
+    const resources = props.Resources;
+    let resourceBody = [];
+
+    for (const [k, v] of Object.entries(resources)) {
+        if(v.display === true && typeof k === "string" && typeof v.amount === "number" && typeof v.max === "number") {
+            resourceBody.push(<ElementContainer><ElementNameLabel htmlFor={k}>{k}</ElementNameLabel> <ElementNumberBox value={v.amount} id={k}></ElementNumberBox><MaxValueSpan>/{v.max}</MaxValueSpan></ElementContainer>);
+        }
+    }
     return (
+        <ElementContainerRestraint>
+            {resourceBody}
+        </ElementContainerRestraint>
+    );
+
+    /*return (
         <>
             {Object.keys(props).map((key) => {
                 if(props[key].Visible) {
@@ -41,8 +55,10 @@ const ResourceElements = (props) => {
                 }
             })};
         </>
-    );
+    );*/
 };
+
+
 
 export default ResourceElements;
 

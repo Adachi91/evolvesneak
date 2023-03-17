@@ -4,6 +4,27 @@ export const ElementContainer = styled.div`
     color: #f09;
 `;
 
+export const ElementContainerRestraint = styled.div`
+    width: 80%;
+    margin:auto;
+`;
+
+export const ElementNameLabel = styled.label`
+    display: inline-flex;
+    flex-direction: column;
+    color: blanchedalmond;
+    margin-top: -2px;
+`;
+
+export const ElementNumberBox = styled.input`
+    background: transparent;
+    box-shadow: rgb(200, 50, 50) 0px 0px 2px 2px;
+    color: blanchedalmond;
+    border: medium none;
+    padding: 0px 0px 2px 4px;
+    margin-left: 0.4rem;
+`;
+
 export const MaxValueSpan = styled.span`
     color: #f09;
 `;

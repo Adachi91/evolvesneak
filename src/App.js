@@ -27,6 +27,7 @@ function App() {
   if(!errors.Error)
     gameResources = GameObj.global.resource;
 
+  errors.Type="info";
   return (
     <>
     <div className="App">

@@ -9,19 +9,27 @@ export const MaxValueSpan = styled.span`
 `;
 
 export const ErrorBoxContainer = styled.div`
-    margin-top: 2rem;
     width: 33.3%;
-    border: 1px solid red;
+    border: 1px solid rgb(200, 50, 50);
+    margin: 2rem auto auto;
+    min-height: 6rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0px 0px 10px 1px rgb(200, 50, 50);
 `
 
 export const ErrorBoxMessage = styled.span`
     color: #fff;
+    font-weight: 500;
 `;
 
 export const ErrorBoxInfo = styled.span`
-    color: orange;
+    color: #efa826;
+    font-weight: 600;
 `;
 
 export const ErrorBoxWarning = styled.span`
-    color: red;
+    color: rgb(255, 88, 88); /*AA on accesibility, maybe aim for different color for AAA*/
+    font-weight: 600;
 `;

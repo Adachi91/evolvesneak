@@ -45,7 +45,7 @@ export function encodeSave(save) {
  * @returns {boolean}
  */
 export function versionCheck(ver) {
-    const _version = ver === "1.3.3" ? true : false;
+    const _version = ver === "1.3.34" ? true : false;
 
     return _version;
 }

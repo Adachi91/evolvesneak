@@ -4,6 +4,8 @@ import styled from "styled-components";
 export const ElementContainer = styled.div`
     display: inline-flex;
     margin-right: 1.05rem;
+    margin-bottom: 1.7rem;
+    min-width: 307px; /* Find a better way to make the fields more uniform */
 
     &::before {
         content: attr(data-tip);
@@ -30,7 +32,7 @@ export const ElementContainer = styled.div`
 
 export const ElementContainerRestraint = styled.div`
     width: 80%;
-    margin:3rem auto auto;;
+    margin:3rem auto auto;
 `;
 
 export const ElementNameLabel = styled.label`

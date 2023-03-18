@@ -3,7 +3,9 @@ import './App.css';
 import Header from './components/head';
 import { decodeSave, testData, testGameDataIntegrity, versionCheck } from './main';
 import ErrorBox from './components/errorBox';
-import ResourceElements from './components/bodyElements';
+//import ResourceElements from './components/bodyElements';
+//import GenerateElements from './components/bodyElements';
+import NumberFields from './components/chatGPTNumberFields';
 
 function App() {
 
@@ -14,7 +16,7 @@ function App() {
     errors.Error = true;
     errors.Type = "warn";
     errors.Message = "Could not verify the structure of the game data.";
-
+    //Fix me you idiot, BAKA
     if(!versionCheck(GameObj.version)) {
       errors.Error = true;
       errors.Type = "info";
@@ -27,15 +29,20 @@ function App() {
   if(!errors.Error)
     gameResources = GameObj.resource;
 
+  /*const NumberGames = (obj) => {
+    return <NumberFields values={obj} />;
+  };*/
+  
   return (
     <>
     <div className="App">
       <Header></Header>
       <ErrorBox Error={errors.Error} Type={errors.Type} Message={errors.Message} />
-      <ResourceElements Resources={gameResources} />
+      <NumberFields values={gameResources} />
     </div>
     </>
   );
+  //<ResourceElements Resources={gameResources} />
 }
 
 export default App;

@@ -6,6 +6,8 @@ import ErrorBox from './components/errorBox';
 //import ResourceElements from './components/bodyElements';
 //import GenerateElements from './components/bodyElements';
 import NumberFields from './components/chatGPTNumberFields';
+//import usrSaveTextArea from './components/userInput';
+import UserSaveDataElement from './components/userInput';
 
 function App() {
 
@@ -33,12 +35,14 @@ function App() {
     return <NumberFields values={obj} />;
   };*/
   
+  //<usrSaveTextArea decodeSave={decodeSave} />
   return (
     <>
     <div className="App">
       <Header></Header>
       <ErrorBox Error={errors.Error} Type={errors.Type} Message={errors.Message} />
       <NumberFields values={gameResources} />
+      <UserSaveDataElement decodeSave={decodeSave} />
     </div>
     </>
   );

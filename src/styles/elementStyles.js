@@ -51,6 +51,26 @@ export const ElementNumberBox = styled.input`
     margin-left: 0.4rem;
 `;
 
+/* User Input Shit  */
+export const UserTextArea = styled.textarea`
+    background: transparent;
+    border: 0px;
+    min-width: 33%;
+    min-height: 12rem;
+    margin-top: 2rem;
+    box-shadow: rgb(200, 50, 50) 0px 0px 10px 1px;
+    color: blanchedalmond;
+    -webkit-box-sizing: border-box;
+    padding: 0.44rem;
+
+    &::placeholder {
+        font-size: 1.266rem;
+        text-align: center;
+        font-weight: 600;
+        font-variant-caps: all-petite-caps;
+    }
+`;
+
 
 /* Errorbox */
 export const ErrorBoxContainer = styled.div`

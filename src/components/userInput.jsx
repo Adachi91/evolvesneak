@@ -1,21 +1,48 @@
 import React, { useState } from 'react';
+import { decodeSave, encodeSave, testGameDataIntegrity, versionCheck, versionCheck } from '../main';
 import { ElementContainerRestraint, UserTextArea } from '../styles/elementStyles';
 import ErrorBox from './errorBox';
 
-export default function UserSaveDataElement( { decodeSave } ) {
+/* basically all of user state will be in here, I think. I dunno yet */
+export default function UserSaveDataElement() {
     //just having a bit of fun trying to figure out why they didn't make a more intiutive accessor
     /*const Person [get, set];
     const [get, set] = useState("Person A");
     const [get, set] = useState("Person B");*/
 
-    const [value, valueSetter] = useState('');
+    const [value, valueSetter] = useState({});
     const [errors, errorsSetter] = useState( { Error: false, Type: '', Message: ''} );
+    const [GameObj, gameSetter] = useState({});
 
     const onUserInput = (event) => {
         const base64regex = /^([0-9a-zA-Z+/]{4})*(([0-9a-zA-Z+/]{2}==)|([0-9a-zA-Z+/]{3}=))?$/; //STACKOVERFLOW TOLD ME TO DO IT
         const saveData = event.clipboardData.getData('text/plain');
     
-        if(base64regex.test(saveData)) {
+        console.log(value);
+        console.log("====================================== BREAK =============================================");
+        console.log(saveData);
+        if(saveData.length > 6969 && base64regex.test(saveData)) {
+            //Decode, Testvalidity, Push to localstorage SIMPLE RIGHT?
+            const decodedData = decodeSave(saveData);
+            const DataCheck = testGameDataIntegrity(decodedData);
+            const _versionCheck = versionCheck(decodedData[version]);
+
+            if(!DataCheck) {
+                errorsSetter({Error: true, Type: 'warn', Message: 'Could not verify game data'});
+            }
+            if(!_versionCheck) {
+                errorsSetter({Error: true, Type:'info', Message: 'Game data is a newer version than the current app, it might be missing any new features until updated'});
+            }
+
+            if(errors.Type === 'warn') {
+                //handle critical.
+                console.warn("Critical was detected");
+                return;
+            }
+
+            valueSetter(saveData);
+            gameSetter(decodedData);
+            
             //this.setState({ value: saveData });
             valueSetter(saveData);
             updateLocalStorage(); //update the localstorage for recovery if something goes wrong!

@@ -1,3 +1,4 @@
+import React from 'react';
 import { decompressFromBase64, compressToBase64 } from 'lz-string';
 //const LZStringlib = require('lz-string');
 
@@ -25,15 +26,14 @@ export function decodeSave(save) {
  * @returns {[boolean, object]}
  */
 export function encodeSave(save) {
-    const result = [false, {}];
+    let result = [false, {}];
 
     try {
         const obj = JSON.parse(save);
         result[1] = compressToBase64(obj);
-        result[0] = true;
     } catch(ex) {
+        result[0] = true;
         result[1] = { ErrorMessage: ex };
-        result[0] = false;
     }
 
     return result;

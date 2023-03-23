@@ -8,15 +8,29 @@ export const testData = "N4IgzgphAmIFwBYCMAOADGgNCA7gQwCdIZ4kB2MjAZmwIjAHsBXAgYw
 
 /**
  *  returns Object after decompressing the save data.
- * @param {string} save - b64 encoded 
- * @returns {object} Game data.
+ * @param {String} save - b64 encoded 
+ * @returns {Object} Game data. {game:{}, success, failuremsg}
  */
 export function decodeSave(save) {
+    const result = { game:{}, success:true, msg:'' }
+    let decompressedString = "";
     save = save.replace(/\s+/g, "");
-    const decompressedString = decompressFromBase64(save);
 
-    const obj = JSON.parse(decompressedString);
-    return obj;
+    try {
+        decompressedString = decompressFromBase64(save);
+    } catch (ex) {
+        result.success = false;
+        result.msg = `Failed to decompress string: ${ex || 'No exception returned from lz-string lib'}`;
+    }
+
+    try {
+        result.game = JSON.parse(decompressedString);
+    } catch (ex) {
+        result.success = false;
+        result.msg = `Failed to parse the string to JSON: ${ex}`;
+    }
+    //const obj = JSON.parse(decompressedString);
+    return result;
 }
 
 
@@ -42,31 +56,39 @@ export function encodeSave(save) {
 /**
  * Checks to see if there has been a game version change when someone tries to load a save.
  * @param {string} ver 
- * @returns {boolean}
+ * @returns {Object} {success, failureMsg}
  */
 export function versionCheck(ver) {
-    const _version = ver === "1.3.34" ? true : false;
+    const scriptVersion = "1.3.34"; //test
+    const result = { success: true, err: '' };
 
-    return _version;
+    if(ver !== scriptVersion) {
+        result.success = false;
+        result.err = `Current game version (${ver}) is not the same as the script was made for (${scriptVersion}). Some features may be missing`;
+    }
+
+    return result;
 }
 
 
 /**
  * Checks to make sure that the structure is proper.
  * @param {object} obj gameobj 
- * @returns {boolean}
+ * @returns {Object} {success, failureMsg}
  */
 export function testGameDataIntegrity(obj) {
-    let result = true;
+    let result = { success: true, err: '' }; //if you love me right we fuck for life
+
     try {
-        if(typeof obj !== "object") result = false;
-        if(typeof obj.version !== "string") result = false;
-        if(typeof obj.resource !== "object") result = false;
-        return result;
+        if(typeof obj !== "object") { result.success = false; result.err = `Could not read game data: Expected Object got ${typeof obj}`; }
+        if(typeof obj.version !== "string") { result.success = false; result.err = `Could not read game version: Expected String got ${typeof obj.version}`; }
+        if(typeof obj.resource !== "object") { result.success = false; result.err = `Could not read game resources: Expected Object got ${typeof obj.resource}`; }
+        //return result;
     } catch(ex) {
-        console.warn(`Could not verify GameObj structure: ${ex}`);
-        return result;
+        result.success = false;
+        result.err = ex;
     }
+    return result;
 }
 
 //const GameObj = decodeSave(test);

@@ -1,17 +1,16 @@
 //import logo from './logo.svg';
 import './App.css';
 import Header from './components/head';
-import { decodeSave, testData, testGameDataIntegrity, versionCheck } from './main';
-import ErrorBox from './components/errorBox';
+//import { decodeSave, testData, testGameDataIntegrity, versionCheck } from './main';
+//import ErrorBox from './components/errorBox';
 //import ResourceElements from './components/bodyElements';
 //import GenerateElements from './components/bodyElements';
-import NumberFields from './components/chatGPTNumberFields';
-//import usrSaveTextArea from './components/userInput';
+//import NumberFields from './components/chatGPTNumberFields';
 import UserSaveDataElement from './components/userInput';
 
 function App() {
 
-  const GameObj = decodeSave(testData);
+  /*const GameObj = decodeSave(testData);
   const errors = { Error: false, Type: "", Message: "" }
 
   if(!testGameDataIntegrity(GameObj)) {
@@ -29,23 +28,24 @@ function App() {
   let gameResources;
   
   if(!errors.Error)
-    gameResources = GameObj.resource;
+    gameResources = GameObj.resource;*/
 
   /*const NumberGames = (obj) => {
     return <NumberFields values={obj} />;
   };*/
   
   //<usrSaveTextArea decodeSave={decodeSave} />
+  //<ErrorBox Error={errors.Error} Type={errors.Type} Message={errors.Message} />
+  // I would like this to be statically placed under header, figure out how to do global states of errors n stuffsz thx bye
   return (
     <>
     <div className="App">
       <Header></Header>
-      <ErrorBox Error={errors.Error} Type={errors.Type} Message={errors.Message} />
-      <NumberFields values={gameResources} />
-      <UserSaveDataElement decodeSave={decodeSave} />
+      <UserSaveDataElement />
     </div>
     </>
   );
+  //<NumberFields values={gameResources} />
   //<ResourceElements Resources={gameResources} />
 }
 

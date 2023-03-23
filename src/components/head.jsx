@@ -1,8 +1,7 @@
 import React from "react";
 import { BySaNc, GithubLink, LeftContainer, LogoContainer, LogoLink, MainHeader } from "../styles/headerStyle";
 
-//most of your sites are malformed <nav> belongs outside of <Header>, I just learned this.
-const Header = () => {
+export default function Header() {
     return (
         <MainHeader>
             <LogoContainer>
@@ -15,6 +14,3 @@ const Header = () => {
         </MainHeader>
     );
 };
-//<a className={leftLinksaStyle} href="https://github.com/adachi91/EvolveSneak">Github</a> 
-
-export default Header;

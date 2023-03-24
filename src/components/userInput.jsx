@@ -1,11 +1,11 @@
-import React, { useState, useReducer } from 'react';
-import { decodeSave, encodeSave, testGameDataIntegrity, versionCheck } from '../main';
-import { ElementContainerRestraint, UserTextArea } from '../styles/elementStyles';
+import React, { useState } from 'react';
+import { decodeSave, testGameDataIntegrity, versionCheck } from '../main';
+import { UserTextArea } from '../styles/elementStyles';
 import GenerateNumberFields from './chatGPTNumberFields';
 import ErrorBox from './errorBox';
 
 
-function errorReducer(state, action) {
+/*function errorReducer(state, action) {
     if(action.type === 'add') {
         console.log(action.payload);
         return {
@@ -15,10 +15,10 @@ function errorReducer(state, action) {
     }
 
     throw Error('Unknown Action');
-}
+}*/
 
 /* basically all of user state will be in here, I think. I dunno yet */
-export default function UserSaveDataElement() {
+export default function UserSaveDataElement({errState, errorHandler}) {
     //just having a bit of fun trying to figure out why they didn't make a more intiutive accessor
     /*const Person [get, set];
     const [get, set] = useState("Person A");
@@ -26,7 +26,7 @@ export default function UserSaveDataElement() {
 
     const [value, valueSetter] = useState('');
     //const [errors, errorsSetter] = useState( {} );
-    const [errors, dispatchError] = useReducer(errorReducer, {});
+    //const [errors, dispatchError] = useReducer(errorReducer, {});
     const [GameObj, gameSetter] = useState({});
     const [GameLoaded, gameLoadedSetter] = useState(false);
 
@@ -40,6 +40,11 @@ export default function UserSaveDataElement() {
     const onUserInput = (event) => {
         const base64regex = /^([0-9a-zA-Z+/]{4})*(([0-9a-zA-Z+/]{2}==)|([0-9a-zA-Z+/]{3}=))?$/; //STACKOVERFLOW TOLD ME TO DO IT
         const saveData = event.clipboardData.getData('text/plain');
+        let errored = false;
+        sethasException(false);
+        gameLoadedSetter(false);
+        gameSetter({});
+
         console.log("Attempting onChangePastewhateevr");
         if(saveData.length > 6969 && base64regex.test(saveData)) { //this is a falsy statement if the string is at least 18,000 chars - how fix?
             //Decode, Testvalidity, Push to localstorage SIMPLE RIGHT?
@@ -48,29 +53,26 @@ export default function UserSaveDataElement() {
             const decompressedSave = decodeSave(saveData);
                 if(!decompressedSave.success)
                 //{  errorsSetter(...errors, { DecompressSaveException: { type:'warn', msg: decompressedSave.err } }); sethasException(true); return; }
-                    {  dispatchError({type: 'add', payload: { DecompressSaveException: { type:'warn', msg: decompressedSave.err}}}); sethasException(true); console.warn("decompress"); }
+                    {  errorHandler({type: 'add', payload: { DecompressSaveException: { type:'warn', msg: decompressedSave.err}}}); errored = true; sethasException(true); console.warn("decompress"); }
                 const _DataCheck = testGameDataIntegrity(decompressedSave.game);
                 if(!_DataCheck.success)
                     //{ errorsSetter(...errors, { DataInterigityException: { type:'warn', msg: _DataCheck.err } } ); sethasException(true); return; }
-                    { dispatchError({type: 'add', payload: { DataInterigityException: { type:'warn', msg: _DataCheck.err }}}); sethasException(true); console.warn("combustion"); }
+                    { errorHandler({type: 'add', payload: { DataInterigityException: { type:'warn', msg: _DataCheck.err }}}); errored = true; sethasException(true); console.warn("combustion"); }
             const _versionCheck = versionCheck(decompressedSave.game.version);
                 if(!_versionCheck.success) 
                     //{ errorsSetter(...errors, VersionMismatchException: { type:'info', msg: _versionCheck.err } ); } //ur a dumbass this doesn't work fix it now you dumbass fucking piece of shit
-                    { dispatchError({ type: 'add', payload: {VersionMismatchException: { type:'info', msg: _versionCheck.err }} }); console.warn("exhaust - mardock scramble"); }
-            console.log(errors); //throws first
-            if(hasException) return;
+                    { errorHandler({ type: 'add', payload: {VersionMismatchException: { type:'info', msg: _versionCheck.err }} }); console.warn("exhaust - mardock scramble"); }
 
-            valueSetter(saveData, updateLocalStorage);
-            gameSetter(decompressedSave, gameProccessedCB);
-            
-            //updateLocalStorage(); //update the localstorage for recovery if something goes wrong!
-            gameLoadedSetter(true);
-            //then do some other shit like eh try and figure out how to render elements while page is loaded, I haven't tried that yet I suppose
+            if(errored === false) {
+                valueSetter(saveData, updateLocalStorage); //set Value state then callback to update local storage since it rely on Value state
+                gameSetter(decompressedSave.game, gameProccessedCB);
+                gameLoadedSetter(true);
+            }
         } else {
             valueSetter('');
             //errorsSetter( { Error: true, Type: 'warn', Message: `Input was not a valid save file! len: ${saveData.length} && b64.test == ${base64regex.test(saveData)} --------------------------- data seen: ${saveData}` } );
             //errorsSetter(...errors, { NotBase64Exception: { type:'warn', msg: `Input was not a valid save file! len: ${saveData.length} && b64.test == ${base64regex.test(saveData)} --------------------------- data seen: ${saveData}` } } );
-            dispatchError({ type: 'add', payload: { NotBase64Exception: { type:'warn', msg: `Input was not a valid save file! len: ${saveData.length} && b64.test == ${base64regex.test(saveData)} --------------------------- data seen: ${saveData}` }}});
+            errorHandler({ type: 'add', payload: { NotBase64Exception: { type:'warn', msg: `Input was not a valid save file! len: ${saveData.length} && b64.test == ${base64regex.test(saveData)} --------------------------- data seen: ${saveData}` }}});
             sethasException(true);
         }
       }
@@ -84,7 +86,7 @@ export default function UserSaveDataElement() {
         if(localStorageEntries.length >= 10) {
             let oldestTime = Infinity;
             let oldestKey = null;
-            for(const [k, v] of localStorageEntries) {
+            for(const [k] of localStorageEntries) {
                 const time = Date.parse(k.split("k")[1]);
     
                 if(time < oldestTime) {
@@ -100,18 +102,19 @@ export default function UserSaveDataElement() {
 
       //TODO: Duplication, if you double paste it will bypass b64 encoding check and allow the text in the field, also small strings like  "asdf" are valid b64 strings need to fix this as well.
       //Might need to combine components
-      if(hasException) console.warn("Before return body?"); //race to condition FUUUUUUUUUUUUUUUUUUUUUUUCK what's a callback
     return (
-    <ElementContainerRestraint>
-    <ErrorBox err={errors} />
-    {GameLoaded && <GenerateNumberFields GameObject={GameObj} />}
-    <UserTextArea 
-        onPaste={onUserInput}
-        value={value}
-        onChange={e => valueSetter(e.target.value)}
-        placeholder="Paste game save here"
-    />
-    </ElementContainerRestraint>
+        <>
+        <ErrorBox errState={errState} />
+        {GameLoaded && <GenerateNumberFields GameObject={GameObj} errorHandler={errorHandler} />}
+        <div>
+        <UserTextArea 
+            onPaste={onUserInput}
+            value={value}
+            onChange={e => valueSetter(e.target.value)}
+            placeholder="Paste game save here"
+        />
+        </div>
+        </>
     );
 }
 

@@ -6,17 +6,19 @@ import { ErrorBoxContainer, ErrorBoxInfo, ErrorBoxMessage, ErrorBoxWarning } fro
  * @param {Object} props - Struct{ err: { index: { type, msg } } }
  * @returns Renders ErrorBox on any error level
  */
-export default function ErrorBox ( { props } ) { //this is about to get sloppy
+export default function ErrorBox ( { errState } ) { //this is about to get sloppy
     /*const error = props.Error;
     const type = props.Type;
     const msg = props.Message;*/
     let isErr = false;
-    const err = props.err;
+    //const err = props.err;
     const errBuilder = [];
 
-    if(Object.keys(err).length > 0) {
+    if(Object.keys(errState).length > 0) {
         isErr = true;
-        for(const [k, v] of err) {
+        //return null;
+        for(const [k, v] of Object.entries(errState)) {
+            console.warn(`[ErroBox]: k: ${k} :: v: ${v}`);
             if(v.type === "info") {
                 //return <ErrorBoxContainer><ErrorBoxInfo>Info: <ErrorBoxMessage>{msg}</ErrorBoxMessage></ErrorBoxInfo></ErrorBoxContainer>
                 errBuilder.push(<ErrorBoxInfo>Info: <ErrorBoxMessage>{k} - {v.msg}</ErrorBoxMessage></ErrorBoxInfo>);
@@ -29,7 +31,7 @@ export default function ErrorBox ( { props } ) { //this is about to get sloppy
 
     return (
         <>
-            {isErr && <ErrorBoxContainer>{errBuilder}</ErrorBoxContainer>}
+            {isErr ? <ErrorBoxContainer>{errBuilder}</ErrorBoxContainer> : null}
         </>
     );
 };

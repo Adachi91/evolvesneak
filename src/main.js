@@ -1,4 +1,3 @@
-import React from 'react';
 import { decompressFromBase64, compressToBase64 } from 'lz-string';
 //const LZStringlib = require('lz-string');
 

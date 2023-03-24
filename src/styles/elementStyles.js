@@ -30,7 +30,7 @@ export const ElementContainer = styled.div`
     }
 `;
 
-export const ElementContainerRestraint = styled.div`
+export const BodyContainerRestraint = styled.div`
     width: 80%;
     margin:3rem auto auto;
 `;
@@ -76,7 +76,7 @@ export const UserTextArea = styled.textarea`
 export const ErrorBoxContainer = styled.div`
     width: 33.3%;
     border: 1px solid rgb(200, 50, 50);
-    margin: 2rem auto auto;
+    margin: 2rem auto 3rem;
     min-height: 6rem;
     display: flex;
     align-items: center;

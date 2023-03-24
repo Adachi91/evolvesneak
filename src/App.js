@@ -8,8 +8,9 @@ import Header from './components/head';
 //import GenerateElements from './components/bodyElements';
 //import NumberFields from './components/chatGPTNumberFields';
 import UserSaveDataElement from './components/userInput';
+import { BodyContainerRestraint } from './styles/elementStyles';
 
-export function dispatchErrors(state, action) {
+function dispatchErrors(state, action) {
   if(action.type === 'add') {
       console.log(action.payload);
       return {
@@ -22,7 +23,8 @@ export function dispatchErrors(state, action) {
 }
 
 function App() {
-const [errors, dispatchError] = useReducer(dispatchErrors, {});
+const errorHandler = (a) => dispatchError(a);
+const [errState, dispatchError] = useReducer(dispatchErrors, {});
   /*const GameObj = decodeSave(testData);
   const errors = { Error: false, Type: "", Message: "" }
 
@@ -54,7 +56,9 @@ const [errors, dispatchError] = useReducer(dispatchErrors, {});
     <>
     <div className="App">
       <Header></Header>
-      <UserSaveDataElement />
+      <BodyContainerRestraint>
+        <UserSaveDataElement errState={errState} errorHandler={errorHandler} />
+      </BodyContainerRestraint>
     </div>
     </>
   );

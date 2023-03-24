@@ -1,4 +1,4 @@
-import React, { useState, Reducer, useReducer } from 'react';
+import React, { useState, useReducer } from 'react';
 import { decodeSave, encodeSave, testGameDataIntegrity, versionCheck } from '../main';
 import { ElementContainerRestraint, UserTextArea } from '../styles/elementStyles';
 import GenerateNumberFields from './chatGPTNumberFields';
@@ -7,6 +7,7 @@ import ErrorBox from './errorBox';
 
 function errorReducer(state, action) {
     if(action.type === 'add') {
+        console.log(action.payload);
         return {
             ...state,
                 ...action.payload
@@ -28,12 +29,18 @@ export default function UserSaveDataElement() {
     const [errors, dispatchError] = useReducer(errorReducer, {});
     const [GameObj, gameSetter] = useState({});
     const [GameLoaded, gameLoadedSetter] = useState(false);
+
     const [hasException, sethasException] = useState(false);
+
+    const gameProccessedCB = () => {
+        console.log(GameObj);
+       // return (<GenerateNumberFields GameObject={GameObj} />);
+    }
 
     const onUserInput = (event) => {
         const base64regex = /^([0-9a-zA-Z+/]{4})*(([0-9a-zA-Z+/]{2}==)|([0-9a-zA-Z+/]{3}=))?$/; //STACKOVERFLOW TOLD ME TO DO IT
         const saveData = event.clipboardData.getData('text/plain');
-
+        console.log("Attempting onChangePastewhateevr");
         if(saveData.length > 6969 && base64regex.test(saveData)) { //this is a falsy statement if the string is at least 18,000 chars - how fix?
             //Decode, Testvalidity, Push to localstorage SIMPLE RIGHT?
 
@@ -41,23 +48,22 @@ export default function UserSaveDataElement() {
             const decompressedSave = decodeSave(saveData);
                 if(!decompressedSave.success)
                 //{  errorsSetter(...errors, { DecompressSaveException: { type:'warn', msg: decompressedSave.err } }); sethasException(true); return; }
-                    {  dispatchError({type: 'add', payload: { DecompressSaveException: { type:'warn', msg: decompressedSave.err}}}); sethasException(true); }
+                    {  dispatchError({type: 'add', payload: { DecompressSaveException: { type:'warn', msg: decompressedSave.err}}}); sethasException(true); console.warn("decompress"); }
                 const _DataCheck = testGameDataIntegrity(decompressedSave.game);
                 if(!_DataCheck.success)
                     //{ errorsSetter(...errors, { DataInterigityException: { type:'warn', msg: _DataCheck.err } } ); sethasException(true); return; }
-                    { dispatchError({type: 'add', payload: { DataInterigityException: { type:'warn', msg: _DataCheck.err }}}); sethasException(true); }
+                    { dispatchError({type: 'add', payload: { DataInterigityException: { type:'warn', msg: _DataCheck.err }}}); sethasException(true); console.warn("combustion"); }
             const _versionCheck = versionCheck(decompressedSave.game.version);
                 if(!_versionCheck.success) 
                     //{ errorsSetter(...errors, VersionMismatchException: { type:'info', msg: _versionCheck.err } ); } //ur a dumbass this doesn't work fix it now you dumbass fucking piece of shit
-                    { dispatchError({ type: 'add', payload: {VersionMismatchException: { type:'info', msg: _versionCheck.err }} }); }
-
+                    { dispatchError({ type: 'add', payload: {VersionMismatchException: { type:'info', msg: _versionCheck.err }} }); console.warn("exhaust - mardock scramble"); }
+            console.log(errors); //throws first
             if(hasException) return;
 
-            valueSetter(saveData);
-            gameSetter(decompressedSave);
+            valueSetter(saveData, updateLocalStorage);
+            gameSetter(decompressedSave, gameProccessedCB);
             
-            updateLocalStorage(); //update the localstorage for recovery if something goes wrong!
-
+            //updateLocalStorage(); //update the localstorage for recovery if something goes wrong!
             gameLoadedSetter(true);
             //then do some other shit like eh try and figure out how to render elements while page is loaded, I haven't tried that yet I suppose
         } else {
@@ -73,37 +79,7 @@ export default function UserSaveDataElement() {
        * Updates the localStorage on the users browser to create up to 10 backups of game data with timestamps so if something goes wrong they can recover their older game saves.
        */
       const updateLocalStorage = () => {
-        //i dunno
-        /*const a = localStorage.length;
-        if(a > 10) {
-            //change first backup
-            const oldestValue = [];
-            for(const [k, v] of Object.entries(localStorage)) {
-                const time = k.split("k");
-                if(oldestValue.length === 0) {
-                    const newValue = {};
-                    newValue[k] = v;
-                    oldestValue.push(newValue);
-                } else {
-                    const firstEntry = oldestValue[0];
-                    const firstEntryTime = Date.parse(Object.keys(firstEntry)[0].split("k")[1]);
-                    const currentEntryTime = Date.parse(time);
-    
-    
-                    if(firstEntryTime > currentEntryTime) {
-                        const newValue = {};
-                        newValue[k] = v;
-                        oldestValue.pop();
-                        oldestValue.push(newValue);
-                    }
-                }
-            }
-    
-            localStorage.removeItem(Object.keys(oldestValue[0])[0]);
-            localStorage.setItem('saveBak'+Date.now(), this.state.value);
-        } else {
-            localStorage.setItem('saveBak'+Date.now(), this.state.value);
-        }*/
+        console.warn("I was called, the end of days is upon us. Every persons for themselves and cats, because cats are cool.");
         const localStorageEntries = Object.entries(localStorage);
         if(localStorageEntries.length >= 10) {
             let oldestTime = Infinity;
@@ -124,10 +100,11 @@ export default function UserSaveDataElement() {
 
       //TODO: Duplication, if you double paste it will bypass b64 encoding check and allow the text in the field, also small strings like  "asdf" are valid b64 strings need to fix this as well.
       //Might need to combine components
+      if(hasException) console.warn("Before return body?"); //race to condition FUUUUUUUUUUUUUUUUUUUUUUUCK what's a callback
     return (
     <ElementContainerRestraint>
-    {hasException && <ErrorBox err={errors} />}
-    {GameLoaded && !hasException && <GenerateNumberFields GameObject={GameObj} />}
+    <ErrorBox err={errors} />
+    {GameLoaded && <GenerateNumberFields GameObject={GameObj} />}
     <UserTextArea 
         onPaste={onUserInput}
         value={value}

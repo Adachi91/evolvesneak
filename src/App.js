@@ -1,4 +1,5 @@
 //import logo from './logo.svg';
+import { useReducer } from 'react';
 import './App.css';
 import Header from './components/head';
 //import { decodeSave, testData, testGameDataIntegrity, versionCheck } from './main';
@@ -8,8 +9,20 @@ import Header from './components/head';
 //import NumberFields from './components/chatGPTNumberFields';
 import UserSaveDataElement from './components/userInput';
 
-function App() {
+export function dispatchErrors(state, action) {
+  if(action.type === 'add') {
+      console.log(action.payload);
+      return {
+          ...state,
+              ...action.payload
+      };
+  }
 
+  throw Error('Unknown Action');
+}
+
+function App() {
+const [errors, dispatchError] = useReducer(dispatchErrors, {});
   /*const GameObj = decodeSave(testData);
   const errors = { Error: false, Type: "", Message: "" }
 

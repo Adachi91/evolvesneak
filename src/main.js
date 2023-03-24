@@ -15,22 +15,27 @@ export function decodeSave(save) {
     const result = { game:{}, success:true, msg:'' }
     let decompressedString = "";
     save = save.replace(/\s+/g, "");
-
+    console.log("Hello");
     try {
         decompressedString = decompressFromBase64(save);
     } catch (ex) {
+        console.warn("Fucked off in decompression");
         result.success = false;
         result.msg = `Failed to decompress string: ${ex || 'No exception returned from lz-string lib'}`;
+        return result;
     }
 
     try {
         result.game = JSON.parse(decompressedString);
     } catch (ex) {
+        console.warn("Fucked off in json fingering");
         result.success = false;
         result.msg = `Failed to parse the string to JSON: ${ex}`;
+        return result;
     }
     //const obj = JSON.parse(decompressedString);
     return result;
+    //maybe I'm thinking about this all wrong
 }
 
 

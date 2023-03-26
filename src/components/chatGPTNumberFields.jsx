@@ -75,7 +75,7 @@ export default function GenerateNumberFields({ GameObject, errorHandler }) {
         elementBody.push(<ElementContainer data-tip={maxValueTip}><ElementNameLabel htmlFor={k}>{k}:</ElementNameLabel>
         <ElementNumberBox
         type="number"
-        value={ModifyGameValues.resource[k].amount || v.amount}//{state[k] || v.amount}
+        value={ModifyGameValues.resource[k].amount || v.amount}//There is no state so numbers can not be updated, a class is required
         max={v.max} 
         id={k}
         name={k}

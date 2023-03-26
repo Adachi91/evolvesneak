@@ -38,7 +38,8 @@ export default function UserSaveDataElement({errState, errorHandler}) {
     }
 
     const onUserInput = (event) => {
-        const base64regex = /^([0-9a-zA-Z+/]{4})*(([0-9a-zA-Z+/]{2}==)|([0-9a-zA-Z+/]{3}=))?$/; //STACKOVERFLOW TOLD ME TO DO IT
+        //const base64regex = /^([0-9a-zA-Z+/]{4})*(([0-9a-zA-Z+/]{2}==)|([0-9a-zA-Z+/]{3}=))?$/; //STACKOVERFLOW TOLD ME TO DO IT
+        const base64Regex = /^(?:[A-Za-z0-9+/]{4})*(?:[A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=)?$/;
         const saveData = event.clipboardData.getData('text/plain');
         let errored = false;
         sethasException(false);
@@ -46,7 +47,7 @@ export default function UserSaveDataElement({errState, errorHandler}) {
         gameSetter({});
 
         console.log("Attempting onChangePastewhateevr");
-        if(saveData.length > 6969 && base64regex.test(saveData)) { //this is a falsy statement if the string is at least 18,000 chars - how fix?
+        if(saveData.length > 6969 && base64Regex.test(saveData)) { //this is a falsy statement if the string is at least 18,000 chars - how fix?
             //Decode, Testvalidity, Push to localstorage SIMPLE RIGHT?
 
             //bastardized go - err, success = func()/method
@@ -72,7 +73,7 @@ export default function UserSaveDataElement({errState, errorHandler}) {
             valueSetter('');
             //errorsSetter( { Error: true, Type: 'warn', Message: `Input was not a valid save file! len: ${saveData.length} && b64.test == ${base64regex.test(saveData)} --------------------------- data seen: ${saveData}` } );
             //errorsSetter(...errors, { NotBase64Exception: { type:'warn', msg: `Input was not a valid save file! len: ${saveData.length} && b64.test == ${base64regex.test(saveData)} --------------------------- data seen: ${saveData}` } } );
-            errorHandler({ type: 'add', payload: { NotBase64Exception: { type:'warn', msg: `Input was not a valid save file! len: ${saveData.length} && b64.test == ${base64regex.test(saveData)} --------------------------- data seen: ${saveData}` }}});
+            errorHandler({ type: 'add', payload: { NotBase64Exception: { type:'warn', msg: `Input was not a valid save file! len: ${saveData.length} && b64.test == ${base64Regex.test(saveData)} --------------------------- data seen: ${saveData}` }}});
             sethasException(true);
         }
       }
